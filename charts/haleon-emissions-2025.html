@@ -1,0 +1,382 @@
+<title>Haleon carbon emissions 2025</title>
+
+<style>
+  :root {
+    color-scheme: light;
+    --surface:        #fcfcfb;
+    --plane:          #f9f9f7;
+    --ink:            #0b0b0b;
+    --ink-2:          #52514e;
+    --ink-muted:      #898781;
+    --rule:           #e1e0d9;
+    --baseline:       #c3c2b7;
+    --series:         #2a78d6;
+    --series-soft:    rgba(42, 120, 214, 0.12);
+    --hairline:       rgba(11, 11, 11, 0.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface:     #1a1a19;
+      --plane:       #0d0d0d;
+      --ink:         #ffffff;
+      --ink-2:       #c3c2b7;
+      --ink-muted:   #898781;
+      --rule:        #2c2c2a;
+      --baseline:    #383835;
+      --series:      #3987e5;
+      --series-soft: rgba(57, 135, 229, 0.16);
+      --hairline:    rgba(255, 255, 255, 0.10);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface:     #1a1a19;
+    --plane:       #0d0d0d;
+    --ink:         #ffffff;
+    --ink-2:       #c3c2b7;
+    --ink-muted:   #898781;
+    --rule:        #2c2c2a;
+    --baseline:    #383835;
+    --series:      #3987e5;
+    --series-soft: rgba(57, 135, 229, 0.16);
+    --hairline:    rgba(255, 255, 255, 0.10);
+  }
+
+  body {
+    margin: 0;
+    background: var(--plane);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 46rem;
+    margin: 0 auto;
+    padding: clamp(1.75rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2rem) 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  h1 {
+    margin: 0.4rem 0 0;
+    font-size: clamp(1.6rem, 4.4vw, 2.1rem);
+    font-weight: 640;
+    letter-spacing: -0.017em;
+    text-wrap: balance;
+  }
+  .standfirst {
+    margin: 0.65rem 0 0;
+    max-width: 62ch;
+    color: var(--ink-2);
+    font-size: 1rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: clamp(1.1rem, 3vw, 1.6rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+  .card h2 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 620;
+    letter-spacing: -0.008em;
+  }
+  .card .sub {
+    margin: 0.25rem 0 0;
+    font-size: 0.855rem;
+    color: var(--ink-2);
+  }
+
+  .chart { display: flex; flex-direction: column; gap: 0.9rem; --bar-scale: 0.78; }
+  .row {
+    display: grid;
+    grid-template-columns: minmax(7.5rem, 12rem) 1fr;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.15rem 0.3rem;
+    border-radius: 6px;
+    cursor: default;
+  }
+  .row:hover, .row:focus-visible { background: var(--series-soft); outline: none; }
+  .row:focus-visible { box-shadow: 0 0 0 2px var(--series); }
+  .row-label {
+    font-size: 0.855rem;
+    color: var(--ink-2);
+    line-height: 1.35;
+  }
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    border-left: 1px solid var(--baseline);
+    padding-left: 2px;
+    min-height: 26px;
+  }
+  .bar {
+    height: 22px;
+    background: var(--series);
+    border-radius: 0 4px 4px 0;
+    flex: 0 0 auto;
+    transition: width 0.5s cubic-bezier(0.22, 0.75, 0.3, 1);
+  }
+  .value {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .value .share {
+    font-weight: 400;
+    color: var(--ink-muted);
+    margin-left: 0.3rem;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar { transition: none; }
+  }
+
+  @media (max-width: 560px) {
+    .chart { --bar-scale: 0.62; }
+    .row { grid-template-columns: minmax(5.5rem, 8.5rem) 1fr; gap: 0.5rem; }
+    .row-label { font-size: 0.8rem; }
+    table { font-size: 0.8rem; }
+    th, td { padding-right: 0.45rem; }
+    th:first-child, td:first-child { white-space: normal; }
+  }
+
+  .unit {
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    letter-spacing: 0.02em;
+  }
+
+  details {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 0.9rem clamp(1.1rem, 3vw, 1.6rem);
+  }
+  summary {
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  summary:focus-visible { outline: 2px solid var(--series); outline-offset: 3px; border-radius: 4px; }
+  .table-scroll { overflow-x: auto; margin-top: 1rem; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.855rem; }
+  caption {
+    text-align: left;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    padding-bottom: 0.5rem;
+  }
+  th, td { padding: 0.42rem 0.7rem 0.42rem 0; text-align: left; white-space: nowrap; }
+  td + td, th + th { text-align: right; font-variant-numeric: tabular-nums; }
+  thead th {
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    border-bottom: 1px solid var(--rule);
+  }
+  tbody tr + tr td { border-top: 1px solid var(--rule); }
+  tbody tr.total td { border-top: 1px solid var(--baseline); font-weight: 620; }
+  tbody tr.group td:first-child { padding-left: 0; }
+
+  .notes { display: flex; flex-direction: column; gap: 0.6rem; }
+  .notes h2 {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .notes ol { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.45rem; }
+  .notes li { font-size: 0.82rem; color: var(--ink-2); }
+  .notes a { color: var(--series); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Haleon plc &middot; reported GHG inventory</p>
+    <h1>Carbon emissions 2025</h1>
+    <p class="standfirst">
+      Haleon's reported footprint is 2,645 ktCO<sub>2</sub>e across all three scopes, and
+      93% of it sits in Scope 3 &mdash; almost two-thirds in purchased goods and services alone.
+    </p>
+  </header>
+
+  <section class="card">
+    <div>
+      <h2>Emissions by scope, 2025</h2>
+      <p class="sub">Scope 2 shown location-based, consistent with Haleon's own footprint split. On a market-based basis Scope 2 is 6 ktCO<sub>2</sub>e.<sup>3</sup></p>
+    </div>
+    <div class="chart" id="chart-scopes" role="img"
+         aria-label="Bar chart of Haleon 2025 emissions by scope: Scope 1, 57 thousand tonnes CO2e; Scope 2 location-based, 125; Scope 3, 2,463."></div>
+    <p class="unit">Thousands of tonnes CO<sub>2</sub>e</p>
+  </section>
+
+  <section class="card">
+    <div>
+      <h2>Inside Scope 3, 2025</h2>
+      <p class="sub">The 2,463 ktCO<sub>2</sub>e of Scope 3, grouped into five value-chain buckets.<sup>2</sup></p>
+    </div>
+    <div class="chart" id="chart-scope3" role="img"
+         aria-label="Bar chart of Haleon 2025 Scope 3 emissions: purchased goods and services, 1,562 thousand tonnes CO2e; use of goods sold, 425; logistics, 263; other procurement managed, 166; end of life, 47."></div>
+    <p class="unit">Thousands of tonnes CO<sub>2</sub>e &middot; share of Scope 3</p>
+  </section>
+
+  <details>
+    <summary>Data table</summary>
+    <div class="table-scroll">
+      <table>
+        <caption>Haleon reported emissions, thousands of tonnes CO<sub>2</sub>e</caption>
+        <thead>
+          <tr><th scope="col">Measure</th><th scope="col">2025</th><th scope="col">2024</th></tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </details>
+
+  <section class="notes">
+    <h2>Notes and sources</h2>
+    <ol>
+      <li>
+        Scope 1, Scope 2 and Scope 3 figures are as reported in Haleon's
+        <strong>2025 ESG Databook</strong> (issued March 2026), pages 15&ndash;16. Scope 1 and 2
+        cover 1 December 2024 to 30 November 2025; Scope 3 covers 1 July 2024 to 30 June 2025.
+        2024 Scope 3 figures were restated by Haleon for methodology and emission-factor changes.
+      </li>
+      <li>
+        The five Scope 3 buckets group the databook's GHG Protocol categories and reconcile
+        exactly to the reported 2,463 ktCO<sub>2</sub>e total.
+        <strong>Purchased goods and services</strong> is category 1.
+        <strong>Logistics</strong> is upstream plus downstream transportation and distribution
+        (253 + 10). <strong>Other procurement managed</strong> is capital goods, fuel- and
+        energy-related activities, waste generated in operations, business travel, employee
+        commuting, upstream leased assets and investments (26 + 44 + 1 + 28 + 37 + 15 + 15).
+        <strong>Use of goods sold</strong> is category 11 and <strong>end of life</strong> is
+        category 12.
+      </li>
+      <li>
+        Haleon reports Scope 2 of 125 ktCO<sub>2</sub>e location-based and 6 ktCO<sub>2</sub>e
+        market-based, reflecting 100% renewable electricity. Net Scope 1 and 2 on a market-based
+        basis is 43 ktCO<sub>2</sub>e after 20 ktCO<sub>2</sub>e of offsets &mdash; a 55% reduction
+        against 2020.
+      </li>
+      <li>
+        The 2%/5%/93% scope split is corroborated by Haleon's
+        <strong>Climate Action Transition Plan</strong> (2025), page 7, which reports the same
+        footprint from the same inventory.
+      </li>
+    </ol>
+  </section>
+</div>
+
+<script>
+  const scopes = [
+    { label: "Scope 1",                    value: 57 },
+    { label: "Scope 2 (location-based)",   value: 125 },
+    { label: "Scope 3",                    value: 2463 }
+  ];
+
+  const scope3 = [
+    { label: "Purchased goods and services", value: 1562 },
+    { label: "Use of goods sold",            value: 425 },
+    { label: "Logistics",                    value: 263 },
+    { label: "Other procurement managed",    value: 166 },
+    { label: "End of life",                  value: 47 }
+  ];
+
+  const fmt = n => n.toLocaleString("en-GB");
+
+  function render(el, data, total, showShare) {
+    const max = Math.max(...data.map(d => d.value));
+    el.replaceChildren(...data.map(d => {
+      const row = document.createElement("div");
+      row.className = "row";
+      row.tabIndex = 0;
+      const share = (d.value / total) * 100;
+      row.title = d.label + ": " + fmt(d.value) + " ktCO2e (" + share.toFixed(1) + "% of total)";
+
+      const label = document.createElement("div");
+      label.className = "row-label";
+      label.textContent = d.label;
+
+      const track = document.createElement("div");
+      track.className = "track";
+
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      bar.style.width = "0%";
+      requestAnimationFrame(() => {
+        bar.style.width = "calc(" + (d.value / max) * 100 + "% * var(--bar-scale))";
+      });
+
+      const value = document.createElement("div");
+      value.className = "value";
+      value.textContent = fmt(d.value);
+      if (showShare) {
+        const s = document.createElement("span");
+        s.className = "share";
+        s.textContent = share.toFixed(0) + "%";
+        value.append(s);
+      }
+
+      track.append(bar, value);
+      row.append(label, track);
+      return row;
+    }));
+  }
+
+  const scopeTotal = scopes.reduce((a, d) => a + d.value, 0);
+  render(document.getElementById("chart-scopes"), scopes, scopeTotal, true);
+  render(document.getElementById("chart-scope3"), scope3, 2463, true);
+
+  const tableRows = [
+    ["Scope 1", 57, 68],
+    ["Scope 2 (location-based)", 125, 124],
+    ["Scope 2 (market-based)", 6, 7],
+    ["Scope 3", 2463, 2532],
+    ["Total (Scope 1 + 2 location-based + 3)", 2645, 2724, true],
+    ["— Purchased goods and services", 1562, 1617],
+    ["— Use of goods sold", 425, 426],
+    ["— Logistics", 263, 280],
+    ["— Other procurement managed", 166, 162],
+    ["— End of life", 47, 47],
+    ["Total Scope 3", 2463, 2532, true]
+  ];
+
+  document.getElementById("table-body").replaceChildren(...tableRows.map(([name, y25, y24, isTotal]) => {
+    const tr = document.createElement("tr");
+    if (isTotal) tr.className = "total";
+    const th = document.createElement("td");
+    th.textContent = name;
+    const a = document.createElement("td");
+    a.textContent = fmt(y25);
+    const b = document.createElement("td");
+    b.textContent = fmt(y24);
+    tr.append(th, a, b);
+    return tr;
+  }));
+</script>

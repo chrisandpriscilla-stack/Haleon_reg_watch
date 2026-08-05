@@ -1,0 +1,26 @@
+measure,unit,2025,2024,source
+Scope 1,ktCO2e,57,68,2025 ESG Databook p.15
+Scope 2 (location-based),ktCO2e,125,124,2025 ESG Databook p.15
+Scope 2 (market-based),ktCO2e,6,7,2025 ESG Databook p.15
+Total Scope 1&2 (location-based),ktCO2e,182,192,2025 ESG Databook p.15
+Total Scope 1&2 (market-based),ktCO2e,63,75,2025 ESG Databook p.15
+Net Scope 1&2 (market-based after offsets),ktCO2e,43,48,2025 ESG Databook p.15
+Emissions offset,ktCO2e,20,27,2025 ESG Databook p.15
+Scope 3: Purchased goods and services (cat 1),ktCO2e,1562,1617,2025 ESG Databook p.16
+Scope 3: Capital goods (cat 2),ktCO2e,26,26,2025 ESG Databook p.16
+Scope 3: Fuel and energy-related activities (cat 3),ktCO2e,44,48,2025 ESG Databook p.16
+Scope 3: Transportation and distribution upstream (cat 4),ktCO2e,253,270,2025 ESG Databook p.16
+Scope 3: Waste generated in operations (cat 5),ktCO2e,1,2,2025 ESG Databook p.16
+Scope 3: Business travel (cat 6),ktCO2e,28,22,2025 ESG Databook p.16
+Scope 3: Employee commuting (cat 7),ktCO2e,37,37,2025 ESG Databook p.16
+Scope 3: Leased assets upstream (cat 8),ktCO2e,15,13,2025 ESG Databook p.16
+Scope 3: Transportation and distribution downstream (cat 9),ktCO2e,10,10,2025 ESG Databook p.16
+Scope 3: Use of sold products (cat 11),ktCO2e,425,426,2025 ESG Databook p.16
+Scope 3: End of life (cat 12),ktCO2e,47,47,2025 ESG Databook p.16
+Scope 3: Investments (cat 15),ktCO2e,15,14,2025 ESG Databook p.16
+Total Scope 3,ktCO2e,2463,2532,2025 ESG Databook p.16
+Bucket: Purchased goods and services,ktCO2e,1562,1617,cat 1
+Bucket: Logistics,ktCO2e,263,280,cat 4 + cat 9
+Bucket: Other procurement managed,ktCO2e,166,162,cat 2+3+5+6+7+8+15
+Bucket: Use of goods sold,ktCO2e,425,426,cat 11
+Bucket: End of life,ktCO2e,47,47,cat 12
