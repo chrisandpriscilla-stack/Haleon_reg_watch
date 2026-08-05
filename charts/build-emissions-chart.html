@@ -6,29 +6,32 @@
   html, body { margin: 0; padding: 0; background: #eceae4; }
   #card {
     width: 1240px;
-    height: 812px;
+    height: 844px;
     background: #fcfcfb;
     font-family: system-ui, -apple-system, "Segoe UI", "DejaVu Sans", sans-serif;
   }
   svg { display: block; }
-  .t-title   { font-size: 27px; font-weight: 640; fill: #0b0b0b; letter-spacing: -0.4px; }
-  .t-sub     { font-size: 15px; fill: #52514e; }
-  .t-eyebrow { font-size: 11.5px; font-weight: 600; fill: #898781; letter-spacing: 1.1px; }
-  .t-colhead { font-size: 12px; font-weight: 600; fill: #898781; letter-spacing: 1px; }
-  .t-coltot  { font-size: 19px; font-weight: 640; fill: #0b0b0b; }
-  .t-name    { font-size: 14.5px; font-weight: 600; fill: #0b0b0b; }
-  .t-val     { font-size: 13px; fill: #52514e; font-variant-numeric: tabular-nums; }
-  .t-foot    { font-size: 11.5px; fill: #898781; }
+  .t-title    { font-size: 27px; font-weight: 640; fill: #0b0b0b; letter-spacing: -0.4px; }
+  .t-sub      { font-size: 15px; fill: #52514e; }
+  .t-eyebrow  { font-size: 11.5px; font-weight: 600; fill: #898781; letter-spacing: 1.1px; }
+  .t-colhead  { font-size: 12px; font-weight: 600; fill: #898781; letter-spacing: 1px; }
+  .t-coltot   { font-size: 19px; font-weight: 640; fill: #0b0b0b; }
+  .t-name     { font-size: 14.5px; font-weight: 600; fill: #0b0b0b; }
+  .t-val      { font-size: 13px; fill: #52514e; font-variant-numeric: tabular-nums; }
+  .t-grouplab { font-size: 12px; font-weight: 600; fill: #52514e; letter-spacing: 1px; }
+  .t-groupval { font-size: 16px; font-weight: 640; fill: #0b0b0b; font-variant-numeric: tabular-nums; }
+  .t-groupsub { font-size: 12.5px; fill: #898781; }
+  .t-foot     { font-size: 11.5px; fill: #898781; }
 </style>
 </head>
 <body>
-<div id="card"><svg id="svg" width="1240" height="812" viewBox="0 0 1240 812"></svg></div>
+<div id="card"><svg id="svg" width="1240" height="844" viewBox="0 0 1240 844"></svg></div>
 
 <script>
 const LEADER = "#b3b1a9";
 const PLOT_TOP = 222, PLOT_BOT = 690;
 const H = PLOT_BOT - PLOT_TOP;
-const LEFT_X = 300, RIGHT_X = 762, BAR_W = 88;
+const LEFT_X = 300, RIGHT_X = 780, BAR_W = 88;
 const GAP = 2;
 const LINE_H = 19, VAL_H = 19, BLOCK_PAD = 10, MIN_SEP = 10;
 
@@ -39,12 +42,21 @@ const left = [
   { name: "Scope 2 (location-based)", value: 125,  color: "#a9a7a0" },
   { name: "Scope 3",                  value: 2463, color: "#2a78d6" }
 ];
+
+// Scope 3, ordered so the source-to-sale categories sit together at the top
 const right = [
-  { name: "Purchased goods and services", value: 1562, color: "#eb6834" },
-  { name: "Use of goods sold",            value: 425,  color: "#1baf7a" },
-  { name: "Logistics",                    value: 263,  color: "#eda100" },
-  { name: "Other procurement managed",    value: 166,  color: "#e87ba4" },
-  { name: "End of life",                  value: 47,   color: "#4a3aa7" }
+  { name: "Purchased goods and services",    value: 1562, color: "#eb6834" },
+  { name: "Logistics",                       value: 263,  color: "#1baf7a" },
+  { name: "Other procurement managed",       value: 86,   color: "#eda100" },
+  { name: "Travel, commuting & investments", value: 80,   color: "#e34948" },
+  { name: "Use of goods sold",               value: 425,  color: "#e87ba4" },
+  { name: "End of life",                     value: 47,   color: "#4a3aa7" }
+];
+
+// group brackets: [first index, last index, eyebrow, value line, note]
+const groups = [
+  [0, 2, "SOURCE TO SALE", "1,911 ktCO₂e · 78%", "Haleon's 42%-by-2030 target boundary"],
+  [3, 5, "OUTSIDE THE BOUNDARY", "552 ktCO₂e · 22%", "categories 6, 7, 11, 12 and 15"]
 ];
 
 const svg = document.getElementById("svg");
@@ -94,7 +106,7 @@ const leftSegs = layout(left, scopeTotal, LEFT_X);
 const rightSegs = layout(right, s3Total, RIGHT_X);
 const s3 = leftSegs[2];
 
-// connector wedge: Scope 3 segment -> the right-hand stack
+// connector wedge: the Scope 3 segment opened out into the right-hand stack
 el("path", {
   d: `M${LEFT_X + BAR_W},${s3.y} L${RIGHT_X},${PLOT_TOP} L${RIGHT_X},${PLOT_BOT} L${LEFT_X + BAR_W},${s3.y + s3.h} Z`,
   fill: "#2a78d6", "fill-opacity": "0.07"
@@ -107,26 +119,45 @@ el("path", {
   el("path", { d: roundedPath(s.x, s.y, BAR_W, s.h, s.first ? 4 : 0, s.last ? 4 : 0), fill: s.color });
 });
 
+// group brackets, set in the empty wedge space to the left of the Scope 3 stack
+const BX = RIGHT_X - 34, TICK = 16;
+groups.forEach(([i0, i1, eyebrow, valueLine, note]) => {
+  const top = rightSegs[i0].y;
+  const bot = rightSegs[i1].y + rightSegs[i1].h;
+  el("path", {
+    d: `M${BX + TICK},${top} L${BX},${top} L${BX},${bot} L${BX + TICK},${bot}`,
+    fill: "none", stroke: "#898781", "stroke-width": 1.25
+  });
+  const cy = (top + bot) / 2;
+  el("text", { x: BX - 14, y: cy - 16, "text-anchor": "end", class: "t-grouplab" }, eyebrow);
+  el("text", { x: BX - 14, y: cy + 6,  "text-anchor": "end", class: "t-groupval" }, valueLine);
+  el("text", { x: BX - 14, y: cy + 26, "text-anchor": "end", class: "t-groupsub" }, note);
+});
+
 function placeLabels(segs, side, total, maxChars) {
   const blocks = segs.map(s => {
     const lines = wrapName(s.name, maxChars);
     return { seg: s, lines, h: lines.length * LINE_H + VAL_H + BLOCK_PAD };
   });
 
-  // start centred on the segment, then resolve overlaps downward and clamp
+  // Start each block centred on its segment, then relieve crowding locally:
+  // push down through overlaps, clamp the last block to the plot, then push
+  // up only those blocks the clamp actually collides with.
+  const TOP_LIMIT = PLOT_TOP - 30, BOTTOM_LIMIT = PLOT_BOT + 30;
+  const n = blocks.length;
+
   blocks.forEach(b => { b.y = b.seg.mid - b.h / 2; });
-  for (let i = 1; i < blocks.length; i++) {
+  if (blocks[0].y < TOP_LIMIT) blocks[0].y = TOP_LIMIT;
+  for (let i = 1; i < n; i++) {
     const minY = blocks[i - 1].y + blocks[i - 1].h + MIN_SEP;
     if (blocks[i].y < minY) blocks[i].y = minY;
   }
-  const last = blocks[blocks.length - 1];
-  const overflow = last.y + last.h - (PLOT_BOT + 26);
-  if (overflow > 0) {
-    blocks.forEach(b => { b.y -= overflow; });
-    for (let i = blocks.length - 2; i >= 0; i--) {
-      const maxY = blocks[i + 1].y - blocks[i].h - MIN_SEP;
-      if (blocks[i].y > maxY) blocks[i].y = maxY;
-    }
+
+  const last = blocks[n - 1];
+  if (last.y + last.h > BOTTOM_LIMIT) last.y = BOTTOM_LIMIT - last.h;
+  for (let i = n - 2; i >= 0; i--) {
+    const maxY = blocks[i + 1].y - blocks[i].h - MIN_SEP;
+    if (blocks[i].y > maxY) blocks[i].y = maxY;
   }
 
   blocks.forEach(b => {
@@ -159,7 +190,7 @@ placeLabels(rightSegs, "right", s3Total, 21);
 el("text", { x: 60, y: 56, class: "t-eyebrow" }, "HALEON PLC · REPORTED GHG INVENTORY, 2025");
 el("text", { x: 60, y: 94, class: "t-title" }, "Where Haleon's carbon emissions sit");
 el("text", { x: 60, y: 124, class: "t-sub" },
-   "93% of the footprint is Scope 3 — and almost two-thirds of that is what Haleon buys to make its products.");
+   "93% of the footprint is Scope 3, and 78% of that falls inside the source-to-sale boundary Haleon set its target against.");
 
 el("text", { x: LEFT_X + BAR_W / 2, y: PLOT_TOP - 50, "text-anchor": "middle", class: "t-colhead" }, "ALL SCOPES");
 el("text", { x: LEFT_X + BAR_W / 2, y: PLOT_TOP - 24, "text-anchor": "middle", class: "t-coltot" }, "2,645 ktCO₂e");
@@ -169,9 +200,10 @@ el("text", { x: RIGHT_X + BAR_W / 2, y: PLOT_TOP - 24, "text-anchor": "middle", 
 el("line", { x1: 60, y1: 736, x2: 1180, y2: 736, stroke: "#e1e0d9", "stroke-width": 1 });
 [
   "Source: Haleon 2025 ESG Databook (issued March 2026), pp. 15–16. Scope 2 is shown location-based; on a market-based basis Scope 2 is 6 ktCO₂e.",
-  "Reporting periods differ: Scope 1 and 2 cover Dec 2024–Nov 2025; Scope 3 covers Jul 2024–Jun 2025.",
-  "The five buckets group the databook's GHG Protocol categories and sum exactly to 2,463. Logistics = upstream + downstream transport (253 + 10).",
-  "Other procurement managed = capital goods, fuel and energy, waste, business travel, commuting, upstream leased assets and investments."
+  "Reporting periods differ: Scope 1 and 2 cover Dec 2024–Nov 2025; Scope 3 covers Jul 2024–Jun 2025. The six Scope 3 buckets sum exactly to the reported 2,463 ktCO₂e.",
+  "Source to sale is Haleon's own target boundary: every Scope 3 category except 6, 7 and 10–15. Logistics = upstream + downstream transport (253 + 10).",
+  "Other procurement managed = capital goods, fuel and energy, waste and upstream leased assets (26 + 44 + 1 + 15) — the procurement that falls inside the boundary.",
+  "Travel, commuting and investments (categories 6, 7 and 15) fall outside it, so they sit below the bracket alongside use of goods sold and end of life."
 ].forEach((line, i) => el("text", { x: 60, y: 758 + i * 16, class: "t-foot" }, line));
 </script>
 </body>

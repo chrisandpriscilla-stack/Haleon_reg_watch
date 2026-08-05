@@ -19,8 +19,11 @@ Scope 3: Use of sold products (cat 11),ktCO2e,425,426,2025 ESG Databook p.16
 Scope 3: End of life (cat 12),ktCO2e,47,47,2025 ESG Databook p.16
 Scope 3: Investments (cat 15),ktCO2e,15,14,2025 ESG Databook p.16
 Total Scope 3,ktCO2e,2463,2532,2025 ESG Databook p.16
-Bucket: Purchased goods and services,ktCO2e,1562,1617,cat 1
-Bucket: Logistics,ktCO2e,263,280,cat 4 + cat 9
-Bucket: Other procurement managed,ktCO2e,166,162,cat 2+3+5+6+7+8+15
-Bucket: Use of goods sold,ktCO2e,425,426,cat 11
-Bucket: End of life,ktCO2e,47,47,cat 12
+Bucket (source to sale): Purchased goods and services,ktCO2e,1562,1617,cat 1
+Bucket (source to sale): Logistics,ktCO2e,263,280,cat 4 + cat 9
+Bucket (source to sale): Other procurement managed,ktCO2e,86,89,cat 2+3+5+8
+Subtotal source to sale,ktCO2e,1911,1986,cats 1-5 + 8 + 9 (excludes 6/7/10-15)
+Bucket (outside boundary): Travel commuting and investments,ktCO2e,80,73,cat 6+7+15
+Bucket (outside boundary): Use of goods sold,ktCO2e,425,426,cat 11
+Bucket (outside boundary): End of life,ktCO2e,47,47,cat 12
+Subtotal outside boundary,ktCO2e,552,546,cats 6+7+11+12+15
