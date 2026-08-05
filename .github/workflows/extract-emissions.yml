@@ -1,0 +1,48 @@
+name: Extract Haleon emissions data
+
+on:
+  push:
+    branches:
+      - claude/haleon-emissions-chart-126jlz
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pypdf
+        run: pip install --quiet pypdf
+
+      - name: Extract emissions pages
+        run: |
+          python - <<'PY'
+          import urllib.request, io
+          from pypdf import PdfReader
+
+          DOCS = [
+              ("DATABOOK-2025",
+               "https://www.haleon.com/content/dam/haleon/corporate/documents/our-impact/2025/2025-ESG-Databook.pdf",
+               range(11, 19)),
+              ("CATP-2025",
+               "https://www.haleon.com/content/dam/haleon/corporate/documents/our-impact/2025/Climate-Action-Transition-Plan.pdf",
+               range(4, 9)),
+          ]
+
+          for name, url, pages in DOCS:
+              print("=" * 30, name, "=" * 30, flush=True)
+              try:
+                  req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+                  data = urllib.request.urlopen(req, timeout=120).read()
+                  reader = PdfReader(io.BytesIO(data))
+                  print(f"[pages in doc: {len(reader.pages)}]", flush=True)
+                  for i in pages:
+                      if i < len(reader.pages):
+                          print(f"\n----- {name} PDF page index {i} (printed page ~{i+1}) -----", flush=True)
+                          print(reader.pages[i].extract_text(), flush=True)
+              except Exception as e:
+                  print(f"FAILED {name}: {e!r}", flush=True)
+          PY
