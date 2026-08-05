@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: #eceae4; }
+  #card {
+    width: 1240px;
+    height: 812px;
+    background: #fcfcfb;
+    font-family: system-ui, -apple-system, "Segoe UI", "DejaVu Sans", sans-serif;
+  }
+  svg { display: block; }
+  .t-title   { font-size: 27px; font-weight: 640; fill: #0b0b0b; letter-spacing: -0.4px; }
+  .t-sub     { font-size: 15px; fill: #52514e; }
+  .t-eyebrow { font-size: 11.5px; font-weight: 600; fill: #898781; letter-spacing: 1.1px; }
+  .t-colhead { font-size: 12px; font-weight: 600; fill: #898781; letter-spacing: 1px; }
+  .t-coltot  { font-size: 19px; font-weight: 640; fill: #0b0b0b; }
+  .t-name    { font-size: 14.5px; font-weight: 600; fill: #0b0b0b; }
+  .t-val     { font-size: 13px; fill: #52514e; font-variant-numeric: tabular-nums; }
+  .t-foot    { font-size: 11.5px; fill: #898781; }
+</style>
+</head>
+<body>
+<div id="card"><svg id="svg" width="1240" height="812" viewBox="0 0 1240 812"></svg></div>
+
+<script>
+const LEADER = "#b3b1a9";
+const PLOT_TOP = 222, PLOT_BOT = 690;
+const H = PLOT_BOT - PLOT_TOP;
+const LEFT_X = 300, RIGHT_X = 762, BAR_W = 88;
+const GAP = 2;
+const LINE_H = 19, VAL_H = 19, BLOCK_PAD = 10, MIN_SEP = 10;
+
+const scopeTotal = 2645, s3Total = 2463;
+
+const left = [
+  { name: "Scope 1",                  value: 57,   color: "#6f6d68" },
+  { name: "Scope 2 (location-based)", value: 125,  color: "#a9a7a0" },
+  { name: "Scope 3",                  value: 2463, color: "#2a78d6" }
+];
+const right = [
+  { name: "Purchased goods and services", value: 1562, color: "#eb6834" },
+  { name: "Use of goods sold",            value: 425,  color: "#1baf7a" },
+  { name: "Logistics",                    value: 263,  color: "#eda100" },
+  { name: "Other procurement managed",    value: 166,  color: "#e87ba4" },
+  { name: "End of life",                  value: 47,   color: "#4a3aa7" }
+];
+
+const svg = document.getElementById("svg");
+const NS = "http://www.w3.org/2000/svg";
+const fmt = n => n.toLocaleString("en-GB");
+
+function el(tag, attrs, text) {
+  const n = document.createElementNS(NS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text !== undefined) n.textContent = text;
+  svg.appendChild(n);
+  return n;
+}
+
+function roundedPath(x, y, w, h, rTop, rBot) {
+  const rt = Math.min(rTop, h / 2), rb = Math.min(rBot, h / 2);
+  return `M${x},${y + rt} Q${x},${y} ${x + rt},${y} L${x + w - rt},${y} Q${x + w},${y} ${x + w},${y + rt}` +
+         ` L${x + w},${y + h - rb} Q${x + w},${y + h} ${x + w - rb},${y + h} L${x + rb},${y + h}` +
+         ` Q${x},${y + h} ${x},${y + h - rb} Z`;
+}
+
+function wrapName(name, maxChars) {
+  if (name.length <= maxChars) return [name];
+  const words = name.split(" ");
+  const lines = [];
+  let cur = words.shift();
+  for (const w of words) {
+    if ((cur + " " + w).length <= maxChars) cur += " " + w;
+    else { lines.push(cur); cur = w; }
+  }
+  lines.push(cur);
+  return lines;
+}
+
+function layout(data, total, x) {
+  let cursor = PLOT_TOP;
+  return data.map((d, i) => {
+    const raw = (d.value / total) * H;
+    const h = Math.max(raw - (i < data.length - 1 ? GAP : 0), 3);
+    const seg = { ...d, x, y: cursor, h, mid: cursor + h / 2, first: i === 0, last: i === data.length - 1 };
+    cursor += raw;
+    return seg;
+  });
+}
+
+const leftSegs = layout(left, scopeTotal, LEFT_X);
+const rightSegs = layout(right, s3Total, RIGHT_X);
+const s3 = leftSegs[2];
+
+// connector wedge: Scope 3 segment -> the right-hand stack
+el("path", {
+  d: `M${LEFT_X + BAR_W},${s3.y} L${RIGHT_X},${PLOT_TOP} L${RIGHT_X},${PLOT_BOT} L${LEFT_X + BAR_W},${s3.y + s3.h} Z`,
+  fill: "#2a78d6", "fill-opacity": "0.07"
+});
+[[s3.y, PLOT_TOP], [s3.y + s3.h, PLOT_BOT]].forEach(([y1, y2]) => {
+  el("line", { x1: LEFT_X + BAR_W, y1, x2: RIGHT_X, y2, stroke: "#2a78d6", "stroke-opacity": "0.35", "stroke-width": 1 });
+});
+
+[...leftSegs, ...rightSegs].forEach(s => {
+  el("path", { d: roundedPath(s.x, s.y, BAR_W, s.h, s.first ? 4 : 0, s.last ? 4 : 0), fill: s.color });
+});
+
+function placeLabels(segs, side, total, maxChars) {
+  const blocks = segs.map(s => {
+    const lines = wrapName(s.name, maxChars);
+    return { seg: s, lines, h: lines.length * LINE_H + VAL_H + BLOCK_PAD };
+  });
+
+  // start centred on the segment, then resolve overlaps downward and clamp
+  blocks.forEach(b => { b.y = b.seg.mid - b.h / 2; });
+  for (let i = 1; i < blocks.length; i++) {
+    const minY = blocks[i - 1].y + blocks[i - 1].h + MIN_SEP;
+    if (blocks[i].y < minY) blocks[i].y = minY;
+  }
+  const last = blocks[blocks.length - 1];
+  const overflow = last.y + last.h - (PLOT_BOT + 26);
+  if (overflow > 0) {
+    blocks.forEach(b => { b.y -= overflow; });
+    for (let i = blocks.length - 2; i >= 0; i--) {
+      const maxY = blocks[i + 1].y - blocks[i].h - MIN_SEP;
+      if (blocks[i].y > maxY) blocks[i].y = maxY;
+    }
+  }
+
+  blocks.forEach(b => {
+    const s = b.seg;
+    const gutter = side === "left" ? 30 : 58;
+    const anchorX = side === "left" ? LEFT_X - gutter : RIGHT_X + BAR_W + gutter;
+    const textX = side === "left" ? anchorX - 8 : anchorX + 8;
+    const anchor = side === "left" ? "end" : "start";
+    const edgeX = side === "left" ? s.x - 5 : s.x + BAR_W + 5;
+    const elbowX = side === "left" ? anchorX + 20 : anchorX - 20;
+    const tie = b.y + 13;
+
+    el("polyline", {
+      points: `${edgeX},${s.mid} ${elbowX},${s.mid} ${elbowX},${tie} ${side === "left" ? elbowX + 20 : elbowX - 20},${tie}`,
+      fill: "none", stroke: LEADER, "stroke-width": 1
+    });
+
+    b.lines.forEach((ln, i) => {
+      el("text", { x: textX, y: b.y + 13 + i * LINE_H, "text-anchor": anchor, class: "t-name" }, ln);
+    });
+    const share = (s.value / total) * 100;
+    el("text", { x: textX, y: b.y + 13 + b.lines.length * LINE_H, "text-anchor": anchor, class: "t-val" },
+       fmt(s.value) + " ktCO₂e  ·  " + Math.round(share) + "%");
+  });
+}
+
+placeLabels(leftSegs, "left", scopeTotal, 20);
+placeLabels(rightSegs, "right", s3Total, 21);
+
+el("text", { x: 60, y: 56, class: "t-eyebrow" }, "HALEON PLC · REPORTED GHG INVENTORY, 2025");
+el("text", { x: 60, y: 94, class: "t-title" }, "Where Haleon's carbon emissions sit");
+el("text", { x: 60, y: 124, class: "t-sub" },
+   "93% of the footprint is Scope 3 — and almost two-thirds of that is what Haleon buys to make its products.");
+
+el("text", { x: LEFT_X + BAR_W / 2, y: PLOT_TOP - 50, "text-anchor": "middle", class: "t-colhead" }, "ALL SCOPES");
+el("text", { x: LEFT_X + BAR_W / 2, y: PLOT_TOP - 24, "text-anchor": "middle", class: "t-coltot" }, "2,645 ktCO₂e");
+el("text", { x: RIGHT_X + BAR_W / 2, y: PLOT_TOP - 50, "text-anchor": "middle", class: "t-colhead" }, "SCOPE 3 BROKEN OUT");
+el("text", { x: RIGHT_X + BAR_W / 2, y: PLOT_TOP - 24, "text-anchor": "middle", class: "t-coltot" }, "2,463 ktCO₂e");
+
+el("line", { x1: 60, y1: 736, x2: 1180, y2: 736, stroke: "#e1e0d9", "stroke-width": 1 });
+[
+  "Source: Haleon 2025 ESG Databook (issued March 2026), pp. 15–16. Scope 2 is shown location-based; on a market-based basis Scope 2 is 6 ktCO₂e.",
+  "Reporting periods differ: Scope 1 and 2 cover Dec 2024–Nov 2025; Scope 3 covers Jul 2024–Jun 2025.",
+  "The five buckets group the databook's GHG Protocol categories and sum exactly to 2,463. Logistics = upstream + downstream transport (253 + 10).",
+  "Other procurement managed = capital goods, fuel and energy, waste, business travel, commuting, upstream leased assets and investments."
+].forEach((line, i) => el("text", { x: 60, y: 758 + i * 16, class: "t-foot" }, line));
+</script>
+</body>
+</html>
