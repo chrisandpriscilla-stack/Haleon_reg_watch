@@ -26,6 +26,15 @@ by country. Detection and triage only; it does not write applications. Feeds the
 supplier-specific "value-at-stake" one-pager used by category managers in QBRs and
 tenders.
 
+Priority technologies are heat pumps (**HP**), biomass (**BIO**), biogas (**BGS**) and
+heat storage (**STOR**); every scheme is tagged, and other low-carbon heat routes are
+tagged **OTHER** and still reported.
+
+Geographic scope: EU (EU-wide layer plus Germany, France, Netherlands, Spain, Italy,
+Poland), India, China, Brazil, Pakistan, South East Asia, Turkey, and a Global
+multilateral layer (CIF, GCF, World Bank/IFC, ADB, IDB, EBRD, JETP), with UK, Ireland
+and US coverage retained.
+
 - Run book: `agents/green-heat-incentives/AGENT.md`
 - **Input you maintain:** `agents/green-heat-incentives/supplier-sites.csv` — one row per
   supplier *site*. `country` is the primary targeting field and the only required one;
