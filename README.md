@@ -16,18 +16,22 @@ Scope 3 target.
 - Digests: `digests/<date>.md`
 - Snapshots for diffing: `sources/<slug>.md`
 
-### Green heat incentives — monthly
+### Green heat incentives — weekly
 
-Finds public funding that helps suppliers switch process heat off fossil fuels, mapped
-to the counties where those suppliers actually run heat assets. Detection and triage
-only; it does not write applications. Feeds the supplier-specific "value-at-stake"
-one-pager used by category managers in QBRs and tenders.
+Identifies government and state incentives, grants, subsidies and other financial
+support that help suppliers decarbonise fossil fuel usage and transition to low-carbon
+heating. For every scheme it captures what it incentivises, what it can be used for,
+value and intensity, eligibility, how to apply and the deadline — presented as a table
+by country. Detection and triage only; it does not write applications. Feeds the
+supplier-specific "value-at-stake" one-pager used by category managers in QBRs and
+tenders.
 
 - Run book: `agents/green-heat-incentives/AGENT.md`
 - **Input you maintain:** `agents/green-heat-incentives/supplier-sites.csv` — one row per
-  supplier *site*. `country` and `region_or_county` drive the search; everything else
-  improves prioritisation. See `supplier-sites.example.csv` for the shape. While this
-  file is empty the agent runs in jurisdiction-default mode and covers the UK national
-  and devolved layer only.
+  supplier *site*. `country` is the primary targeting field and the only required one;
+  `region_or_county` unlocks the sub-national layer (US states, German Länder, Spanish
+  autonomous communities, UK counties). See `supplier-sites.example.csv` for the shape.
+  While the file is empty the agent runs in default-coverage mode over a standing set of
+  countries rather than Haleon's actual footprint.
 - Digests: `incentives/<date>.md`
 - Snapshots for diffing: `sources/green-heat/<slug>.md`
