@@ -4,6 +4,20 @@ Automated watch agents supporting Haleon procurement sustainability. Each agent 
 a schedule, writes a dated digest to the repo, and delivers via the git archive only —
 there is no email step.
 
+## How the archive works
+
+**Both agents commit to `main`.** Their Routines pin the output branch, so each weekly
+run starts from the latest `main`, appends its digest, and overwrites the source
+snapshots under `sources/`. Those snapshots are what make the next run's change
+detection possible — an agent that skips writing them silently breaks the following
+week's diff.
+
+This was not always the case. Runs before 28 August 2026 each pushed to their own
+`claude/upbeat-brown-*` branch cut from `main`, so no run ever saw the previous run's
+state and every digest was a fresh baseline rather than a genuine week-on-week diff.
+Those digests have been collected onto `main`; the original branches are left in place
+but are no longer written to.
+
 ## Agents
 
 ### Scope 3 regulatory briefing — weekly
