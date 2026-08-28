@@ -1,0 +1,3 @@
+site_id,supplier_name,site_name,country,region_or_county,postcode_or_zip,current_heat_source,annual_heat_demand_mwh,annual_heat_tco2e,haleon_category,haleon_annual_spend_gbp,category_manager,notes
+EX-001,EXAMPLE Supplier Ltd,EXAMPLE Bottling Plant,United Kingdom,Derbyshire,S44 6BH,natural gas steam boiler,12000,2200,Primary packaging,4500000,EXAMPLE Name,Illustrative row only — delete before use
+EX-002,EXAMPLE Contract Manufacturer SA,EXAMPLE Granulation Site,Spain,Cataluña,08central,natural gas hot water,8000,1500,Contract manufacturing,7200000,EXAMPLE Name,Illustrative row only — delete before use
