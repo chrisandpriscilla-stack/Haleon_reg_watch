@@ -1,6 +1,8 @@
-# CBAM — Carbon Border Adjustment Mechanism (snapshot 2026-08-28)
+# CBAM — Carbon Border Adjustment Mechanism (snapshot 2026-10-16)
 
-- Definitive regime live since 1 Jan 2026 (importers buy certificates for embedded emissions).
-- Since the 5 June baseline: scope-extension consultation (downstream steel/aluminium products) closed 10 June 2026; on **9 July 2026** the Commission opened a public consultation on a draft delegated regulation governing the **sale and repurchase of CBAM certificates**; on **14 Aug 2026** the Commission published **10 guidance documents** (4 general + 6 sector guides: cement, hydrogen, fertilisers, iron & steel, aluminium, electricity). Operational/implementation detail rather than new scope law.
-- Relevance to Haleon: no bearing on the vPPA/REC/REV electricity instruments; watch only for input-cost effects on steel/aluminium/packaging feeding Scope 3.
+- Definitive regime live since 1 Jan 2026 (importers buy and surrender certificates for embedded emissions). Q2 2026 certificate price published 6 July 2026 at €75.28.
+- **Material change since 28 Aug — scope-expansion legislative process advancing:** the **European Parliament adopted its first-reading negotiating mandate on 15 September 2026** (464–50, 159 abstentions) on the CBAM scope-extension regulation, backing extension to **400+ downstream steel and aluminium products from 2028** and dropping the Commission's price-shock "safety valve"; a companion Temporary Decarbonisation Fund report passed (433–97). Council general approach was agreed 12 June 2026; **first political trilogue scheduled 20 October 2026**. Final product count still open pending trilogue (Commission ~180, Council ~200, Parliament ~400+).
+- **Certificate-trading rules:** consultation on the draft delegated regulation governing the sale/repurchase of CBAM certificates (opened 9 July 2026) closed **6 August 2026**; draft makes the CBAM registry the main channel and sets a €0.05/certificate fee. Not yet adopted.
+- Earlier operational detail unchanged: 14 Aug 2026 the Commission published 10 guidance documents (4 general + 6 sector).
+- Relevance to Haleon: no bearing on the vPPA/REC/REV electricity instruments; watch only for input-cost effects on steel/aluminium/packaging feeding Scope 3 — a wider downstream list from 2028 would broaden that exposure, but nothing binds until a final text is agreed.
 - Canonical page: https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en

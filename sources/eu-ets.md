@@ -1,8 +1,8 @@
-# EU ETS — Emissions Trading System (snapshot 2026-08-28)
+# EU ETS — Emissions Trading System (snapshot 2026-10-16)
 
-- **Material change:** European Commission published its **EU ETS review proposal on 17 July 2026** (Phases 5 & 6, post-2030), aligning the system with the 2040 climate target.
-- Key elements: Linear Reduction Factor cut to **3.7% (2031–2035)** and **1.7% (2036 onward)** from 4.3%, pushing back the zero-cap point; a **€100bn Industrial Decarbonisation Bank** (Phase 1 "Investment Booster" 2028, ~400m allowances); Member States to earmark **≥50%** of auction revenue for ETS-sector decarbonisation (up from ~5%); Market Stability Reserve intake rate cut **24%→12%**; inclusion of permanent domestic carbon removals under discussion.
-- Council/Parliament targeting political agreement **Q1 2027**; intense negotiation expected from September 2026.
-- ETS2 (buildings/road transport) confirmed for 2028. CBAM-linked free-allocation phase-out 2026–2036 continues.
+- Post-2030 review proposal (Phases 5 & 6; file **2026/0212 (COD)**) tabled by the Commission **17 July 2026**, aligning the system with the 2040 climate target.
+- **Material change since 28 Aug:** first **Environment Council policy debate on 12 October 2026**. Ministers discussed cap ambition, international credits and permanent removals, auction-revenue use, free allocation / carbon-leakage, and scope extensions (aviation, maritime, waste). The Presidency is aiming for a Council **general approach by December 2026** — earlier than the Q1 2027 political-agreement timeline previously flagged.
+- Proposal substance unchanged: Linear Reduction Factor cut to **3.7% (2031–2035)** and **1.7% (2036+)** from 4.3%; **€100bn Industrial Decarbonisation Bank** (Phase 1 "Investment Booster" 2028); Member States to earmark **≥50%** of auction revenue for decarbonisation; Market Stability Reserve intake rate cut **24%→12%**; municipal-waste incineration brought into scope from 2031; set-aside for international credits (up to ~260m allowances from 2036) and ~250Mt domestic permanent removals under discussion.
+- Analysts (Carbon Pulse) read the package as "materially bearish" for long-term prices (up to ~450m extra permits across the 2031–40 budget). ETS2 (buildings/road transport) confirmed for 2028. CBAM-linked free-allocation phase-out 2026–2036 continues.
 - Canonical page: https://climate.ec.europa.eu/areas-action/carbon-markets/eu-emissions-trading-system-eu-ets_en
-- ICAP summary: https://icapcarbonaction.com/en/news/eu-commission-publishes-eu-ets-review-proposal
+- Council ENV meeting (12 Oct 2026): https://www.consilium.europa.eu/en/meetings/env/2026/10/12/
