@@ -296,8 +296,8 @@ Substitute <date> with today in YYYY-MM-DD format.
 4. `git status` — verify changes present.
 5. `git add incentives/ sources/green-heat/`
 6. `git -c user.email=agent@anthropic.com -c user.name="Green Heat Incentives Agent" commit -m "Green heat incentives <date>"` — if the commit fails because nothing changed, log it and continue.
-7. PUSH EXPLICITLY — do not rely on the platform to push. Run: `git push origin HEAD:claude/green-heat-incentives-agent-ub25c5`. If rejected as non-fast-forward, run `git push --force-with-lease origin HEAD:claude/green-heat-incentives-agent-ub25c5`. If push fails for auth or permission reasons, capture the exact error text.
-8. `git ls-remote origin claude/green-heat-incentives-agent-ub25c5` — VERIFY the remote branch shows your new SHA. The archive only counts as OK if it does.
+7. PUSH EXPLICITLY to main — do not rely on the platform to push. The archive accumulates on `main` (see the repo README), so each run starts from the latest `main`, appends its digest and overwrites its snapshots. Run: `git push origin HEAD:main`. If rejected as non-fast-forward (main moved since your clone — e.g. the reg-watch agent pushed), run `git pull --rebase origin main` and then `git push origin HEAD:main` again. Never force-push `main`. If push fails for auth or permission reasons, capture the exact error text.
+8. `git ls-remote origin main` — VERIFY the remote `main` shows your new SHA. The archive only counts as OK if it does.
 
 === FINAL STATUS LINE ===
 The very last line of your output MUST be exactly one of:
